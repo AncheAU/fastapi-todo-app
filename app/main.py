@@ -1,6 +1,12 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
+
+
+class TodoCreate(BaseModel):
+    title: str
+
 
 #Todos
 todos = [
@@ -46,4 +52,26 @@ def get_todos():
 def get_health():
     return {
         "status": "healthy"
+    }
+
+
+@app.post("/todos")
+def create_todo(todo : TodoCreate):
+    new_todo = {
+        "id": len(todos) + 1,
+        "title": todo.title,
+        "completed": False
+    }
+
+    todos.append(new_todo)
+    return new_todo
+
+@app.get("/todo/{todo_id}")
+def get_single_todo(todo_id: int):
+    for todo in todos:
+        if todo["id"] == todo_id:
+            return todo
+    
+    return {
+        "error": "Todo Not found."
     }
