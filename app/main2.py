@@ -32,6 +32,9 @@ class TodoCreate(BaseModel):
     title: str
     priority: Literal["high", "medium", "low"]
 
+class TodoUpdate(BaseModel):
+    completed: bool
+
 
 @app.get("/")
 def home():
@@ -110,5 +113,31 @@ def get_priority_high():
     
     return result
 
+
+@app.put("/todos/{todo_id}")
+def update_todo(todo_id: int, todoUpdate: TodoUpdate):
+    for todo in todos:
+        if todo["id"] == todo_id:
+            todo["completed"] = todoUpdate.completed
+
+            return todo
     
+    return {
+        "error": f"Todo with ID {todo_id} does not exist."
+    }
+
+@app.delete("/todos/{todo_id}")
+def delete_todo(todo_id: int):
+    for index, todo in enumerate(todos):
+        if todo["id"] == todo_id:
+            deleted_todo = todos.pop(index)
+        
+            return {
+                "message": "Deleted Successfully.",
+                "deleted": deleted_todo
+            }
+        
+    return {
+        "error": f"Todo with ID {todo_id} does not exist."
+            }
     

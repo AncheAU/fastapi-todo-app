@@ -12,10 +12,10 @@ t = [
 
 
 for i in t:
-    if  "ad" in i["name"].lower() :
+    if  "s" in i["name"].lower() :
         print(i)
-    else:
-        print("Does not exist.")
+
+print("Does not exist.")
 
 
 
